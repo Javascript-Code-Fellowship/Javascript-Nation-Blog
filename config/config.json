@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "gina",
+    "password": "root",
+    "database": "nationdb",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "gina",
+    "password": "root",
+    "database": "nationdb",
+    "host": "127.0.0.1",
+    "dialect": "sqlite:memory"
+  },
+  "production": {
+    "username": "gina",
+    "password": "root",
+    "database": "nationdb",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
