@@ -5,7 +5,7 @@ const { Sequelize, DataTypes } = require('sequelize');
 const userModel = require('./user.js');
 const noteModel = require('./note.js');
 
-const DATABASE_URL = process.env.DATABASE_URL || 'sqlite:memory';
+const DATABASE_URL = process.env.NODE_ENV === 'test' ? 'sqlite:memory' : process.env.DATABASE_URL;
 
 let sequelizeOptions = process.env.NODE_ENV === 'production' ? {
   dialectOptions: {
@@ -18,8 +18,16 @@ let sequelizeOptions = process.env.NODE_ENV === 'production' ? {
 
 const sequelize = new Sequelize(DATABASE_URL, sequelizeOptions);
 
+const users = userModel(sequelize, DataTypes);
+const notes = noteModel(sequelize, DataTypes);
+
+users.hasMany(notes, {
+    onDelete: "cascade"
+});
+notes.belongsTo(users);
+
 module.exports = {
   db: sequelize,
-  users: userModel(sequelize, DataTypes),
-  notes: noteModel(sequelize, DataTypes)
+  users: users,
+  notes: notes
 }
