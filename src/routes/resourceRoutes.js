@@ -3,8 +3,8 @@
 //config for router
 const express = require('express');
 resourceRouter = express.Router();
-
-//pull in needed file
+const { notes } = require('../models/index.js')
+//pull in needed files
 // pull in permissions MW
 //pull in bearerAuth MW
 

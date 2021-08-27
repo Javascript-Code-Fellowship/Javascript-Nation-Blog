@@ -2,7 +2,7 @@
 
 
 const express = require('express');
-// const { user } = require('index');
+const { users } = require('../models/index.js');
 const authRoute = express.Router();
 // const basicAuth = require('middleware')
 
@@ -25,7 +25,8 @@ authRouter.post('/signup', async (req, res, next) => {
 })
 
 authRouter.post('/signin', bsicAuth, async (req, res, next) => {
-    try {//MW verify that the user's password is the same as saved hash.
+    try {
+        //MW verify that the user's password is the same as saved hash.
         //user is saved to the req object
         const user = {
             user: req.user,
