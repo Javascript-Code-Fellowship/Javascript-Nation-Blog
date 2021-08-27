@@ -32,8 +32,8 @@ RACHAEL: Additional testing and support, floating tasks
 
 #### `.env` requirements
 - `PORT` - 8080
-- `DATABASE_URL` - DATABASE_URL=postgres://localhost:5432/
-- `SECRET` - 
+- `DATABASE_URL` - DATABASE_URL=postgres://localhost:5432/nationdb
+- `SECRET` - SupERseCrEtSEcreT
 
 #### How to initialize/run your application (where applicable)
 
