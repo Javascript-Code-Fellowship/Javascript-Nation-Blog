@@ -4,9 +4,9 @@
 const express = require('express');
 const { users } = require('../models/index.js');
 const authRouter = express.Router();
+
 const HttpError = require("../error-handlers/http-error")
 const basicAuth = require('../middleware/basic.js')
-
 
 
 authRouter.post('/signup', async (req, res, next) => {
