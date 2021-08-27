@@ -5,12 +5,12 @@ const errorHandler = require("./error-handlers/error-handler")
 const authRouter = require("./routes/authRoutes")
 const resourceRouter = require("./routes/resourceRoutes")
 
-
+app.use(express.json())
 
 app.use(authRouter)
 app.use(resourceRouter)
 
-app.use(express.json())
+
 
 
 

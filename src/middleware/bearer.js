@@ -1,10 +1,11 @@
 'use strict';
 
 const { users } = require('../models/index.js');
+const HttpError = require("../error-handlers/http-error")
 
 module.exports = async (req, res, next) => {
   try {
-    if (!req.headers.authorization) { _authError() }
+    if (!req.headers.authorization) { return next(new HttpError("Invalid credentials", 401)) }
 
     const token = req.headers.authorization.split(' ').pop();
     const validUser = await users.model.authenticateToken(token);
@@ -14,10 +15,7 @@ module.exports = async (req, res, next) => {
     next();
 
   } catch (e) {
-    _authError();
+    return next(new HttpError("Invalid credentials", 401))
   }
 
-  function _authError() {
-    res.status(403).send('Login Failed')
-  }
 }
