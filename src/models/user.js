@@ -7,10 +7,10 @@ const bcrypt = require('bcrypt');
 const SECRET = process.env.SECRET || 'jwtsecretstring'
 
 const userModel = (sequelize, DataTypes) => {
-  const model = sequelize.define(Users, {
-    username: {type: DataTypes.STRING, required: true, unique: true},
-    password: {type: DataTypes.STRING, required: true},
-    role: {type:DataTypes.ENUM('user', 'writer', 'editor', 'admin'), required: true, defaultValue: 'user'},
+  const model = sequelize.define("Users", {
+    username: { type: DataTypes.STRING, required: true, unique: true },
+    password: { type: DataTypes.STRING, required: true },
+    role: { type: DataTypes.ENUM('user', 'writer', 'editor', 'admin'), required: true, defaultValue: 'user' },
     token: {
       type: DataTypes.VIRTUAL,
       get() {
@@ -27,8 +27,8 @@ const userModel = (sequelize, DataTypes) => {
         const acl = {
           user: ['read'],
           writer: ['read', 'create'],
-          editor: ['read','create','update'],
-          admin: ['read','create','update','delete']
+          editor: ['read', 'create', 'update'],
+          admin: ['read', 'create', 'update', 'delete']
         };
         return acl[this.role]
       }
