@@ -4,7 +4,9 @@
 const express = require('express');
 const { users } = require('../models/index.js');
 const authRouter = express.Router();
+const HttpError = require("../error-handlers/http-error")
 const basicAuth = require('../middleware/basic.js')
+
 
 
 authRouter.post('/signup', async (req, res, next) => {
@@ -18,11 +20,10 @@ authRouter.post('/signup', async (req, res, next) => {
         }
         res.status(201).send(user)
     } catch (e) {
-        console.log(e)
-        //test errors, assign an if/else for the different errors or throw a generic error.
-        next('eror')
-        //status code of 409 if username already exists
-        //status code of 406 if either username or password is not defined.
+        if (e.message == "Validation error") {
+            return next(new HttpError("Username in use", 409))
+        }
+        return next(new HttpError("You need both username and password to sign up", 406))
     }
 })
 
@@ -37,8 +38,7 @@ authRouter.post('/signin', basicAuth, async (req, res, next) => {
         }
         res.status(202).send(user)
     } catch (e) {
-        next('error')
-        //status of 500 and generic error.  
+        return next(new HttpError("Something went wrong", 500))
     }
 })
 
