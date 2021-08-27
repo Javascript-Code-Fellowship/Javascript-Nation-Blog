@@ -2,20 +2,17 @@
 
 //config for router
 const express = require('express');
-resourceRouter = express.Router();
+const resourceRouter = express.Router();
+const bearerAuth = require("../middleware/bearer")
 const { notes } = require('../models/index.js')
 //pull in needed files
 // pull in permissions MW
 //pull in bearerAuth MW
 
 
-resourceRouter.post('/notes', bearerAuth, handleCreate);
-resourceRouter.get('/notes', bearerAuth, handleGetAll)
-resourceRouter.get('/notes/:id', bearerAuth, handleGetOne)
-resourceRouter.put('/notes/:id', bearerAuth, handleUpdateOne)
-resourceRouter.delete('/notes/:id', bearerAuth, handleDeleteOne)
 
-handleCreate = async (req, res) => {
+
+const handleCreate = async (req, res) => {
     try {
         let record = await notes.create(req.body)
         res.status(201).send(record)
@@ -25,7 +22,8 @@ handleCreate = async (req, res) => {
     }
 }
 
-handleGetAll = async (req, res) => {
+
+const handleGetAll = async (req, res) => {
     try {
         let records = await notes.findAll({})
         res.status(200).send(records)
@@ -36,7 +34,7 @@ handleGetAll = async (req, res) => {
     }
 }
 
-handleGetOne = async (req, res) => {
+const handleGetOne = async (req, res) => {
     try {
         let id = req.params.id;
         let record = await notes.findOne({ where: { id } });
@@ -48,7 +46,7 @@ handleGetOne = async (req, res) => {
     }
 }
 
-handleUpdateOne = async (req, res) => {
+const handleUpdateOne = async (req, res) => {
     try {
         let id = req.params.id;
         let updated = await notes.update({ where: { id } });
@@ -60,7 +58,7 @@ handleUpdateOne = async (req, res) => {
     }
 }
 
-handleDeleteOne = async (req, res) => {
+const handleDeleteOne = async (req, res) => {
     try {
         let id = req.params.id;
         let deleted = await notes.destroy({ where: { id } })
@@ -71,5 +69,11 @@ handleDeleteOne = async (req, res) => {
         //status of 400 if no id
     }
 }
+
+resourceRouter.post('/notes', bearerAuth, handleCreate);
+resourceRouter.get('/notes', bearerAuth, handleGetAll)
+resourceRouter.get('/notes/:id', bearerAuth, handleGetOne)
+resourceRouter.put('/notes/:id', bearerAuth, handleUpdateOne)
+resourceRouter.delete('/notes/:id', bearerAuth, handleDeleteOne)
 
 module.exports = resourceRouter;
