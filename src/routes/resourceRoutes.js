@@ -5,6 +5,7 @@ const express = require('express');
 const resourceRouter = express.Router();
 const bearerAuth = require("../middleware/bearer")
 const { notes } = require('../models/index.js')
+const HttpError = require("../error-handlers/http-error");
 //pull in needed files
 // pull in permissions MW
 //pull in bearerAuth MW
@@ -12,61 +13,64 @@ const { notes } = require('../models/index.js')
 
 
 
-const handleCreate = async (req, res) => {
+const handleCreate = async (req, res, next) => {
     try {
         let record = await notes.create(req.body)
         res.status(201).send(record)
     } catch (e) {
-        throw new Error('eror messege')
-        //status code of 500 with generic error messege
+        return next(new HttpError("Something went wrong", 500))
     }
 }
 
 
-const handleGetAll = async (req, res) => {
+const handleGetAll = async (req, res, next) => {
     try {
         let records = await notes.findAll({})
+        if (records.length === 0) {
+            return next(new HttpError("No notes here", 404))
+        }
         res.status(200).send(records)
     } catch (e) {
-        //generic server error
-        //statud code of 404 if no content
-        throw new Error(e)
+        return next(new HttpError("Something went wrong", 500))
     }
 }
 
-const handleGetOne = async (req, res) => {
+const handleGetOne = async (req, res, next) => {
+    if (!req.params.id) {
+        return next(new HttpError("Please specify which note you're trying to access", 400))
+    }
     try {
         let id = req.params.id;
         let record = await notes.findOne({ where: { id } });
         res.status(200).send(record)
     } catch (e) {
-        throw new Error('error messege')
-        //status code of 404 if no content exists
-        //status of 400 if no id
+        return next(new HttpError("Could not find that note", 404))
     }
 }
 
-const handleUpdateOne = async (req, res) => {
+const handleUpdateOne = async (req, res, next) => {
+    if (!req.params.id) {
+        return next(new HttpError("Please specify which note you're trying to access", 400))
+    }
     try {
         let id = req.params.id;
         let updated = await notes.update({ where: { id } });
         res.status(202).send(updated);
     } catch (e) {
-        throw new Error('error messege')
-        //status of 404 if no content
-        //status of 400 if no id
+        return next(new HttpError("Could not find that note", 404))
     }
 }
 
-const handleDeleteOne = async (req, res) => {
+const handleDeleteOne = async (req, res, next) => {
+    if (!req.params.id) {
+        return next(new HttpError("Please specify which note you're trying to access", 400))
+    }
     try {
         let id = req.params.id;
         let deleted = await notes.destroy({ where: { id } })
         res.status(202).send(deleted)
     } catch (e) {
-        throw new Error('error messege', e)
-        // status of 404 if no content
-        //status of 400 if no id
+        return next(new HttpError("Could not find that note", 404))
     }
 }
 

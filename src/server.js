@@ -7,7 +7,7 @@ const resourceRouter = require("./routes/resourceRoutes")
 app.use(express.json())
 
 
-
+app.use(express.json())
 app.use(authRouter)
 app.use(resourceRouter)
 
