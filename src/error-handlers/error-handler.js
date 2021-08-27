@@ -3,6 +3,8 @@ async function errorHandler(err, req, res, next) {
         return next(err);
     }
     console.log(err);
+    //so now the error that we gave a status code and a message is picked up here and deconstructed into a response
+
     const message = err.message || "an unknown server error occurred";
     const statusCode = err.statusCode || 500;
 
