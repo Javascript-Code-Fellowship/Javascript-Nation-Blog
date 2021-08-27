@@ -4,7 +4,7 @@
 const express = require('express');
 const { users } = require('../models/index.js');
 const authRouter = express.Router();
-// const basicAuth = require('middleware')
+const basicAuth = require('../middleware/basic.js')
 
 
 authRouter.post('/signup', async (req, res, next) => {
@@ -24,7 +24,7 @@ authRouter.post('/signup', async (req, res, next) => {
     }
 })
 
-authRouter.post('/signin', async (req, res, next) => {
+authRouter.post('/signin', basicAuth, async (req, res, next) => {
     try {
         //MW verify that the user's password is the same as saved hash.
         //user is saved to the req object
