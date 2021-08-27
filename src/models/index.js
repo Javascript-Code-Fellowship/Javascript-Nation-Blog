@@ -18,8 +18,16 @@ let sequelizeOptions = process.env.NODE_ENV === 'production' ? {
 
 const sequelize = new Sequelize(DATABASE_URL, sequelizeOptions);
 
+const users = userModel(sequelize, DataTypes);
+const notes = noteModel(sequelize, DataTypes);
+
+users.hasMany(notes, {
+    onDelete: "cascade"
+});
+notes.belongsTo(users);
+
 module.exports = {
   db: sequelize,
-  users: userModel(sequelize, DataTypes),
-  notes: noteModel(sequelize, DataTypes)
+  users: users,
+  notes: notes
 }
