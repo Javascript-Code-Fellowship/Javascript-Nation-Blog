@@ -54,7 +54,8 @@ const handleUpdateOne = async (req, res, next) => {
     }
     try {
         let id = req.params.id;
-        let updated = await notes.update({ where: { id } });
+        let obj = req.body;
+        let updated = await notes.update(obj, { where: { id } });
         res.status(202).send(updated);
     } catch (e) {
         return next(new HttpError("Could not find that note", 404))

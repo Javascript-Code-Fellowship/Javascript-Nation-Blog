@@ -50,12 +50,44 @@ describe('AUTH ROUTES', () => {
 
 describe('RESOURCES ROUTES', () => {
 
-    it('should respond to a POST at /notes with 201 and an object, if the user is logged in', async () => {
+    it('should respond to a POST request at /notes with 201 and an object, if the user is logged in', async () => {
         const request = await mockRequest.post('/signin').auth('tester', 'test');
         const token = request.body.token;
-        const route = await mockRequest.post('/notes').send({ name: "fun", description: "funner" }).auth('Authorization', `Bearer ${token}`)
-        console.log('@@@@@@@@@@@@@@@', route)
+        const route = await mockRequest.post('/notes').send({ name: "fun", description: "funner" }).auth(`${token}`, { type: 'bearer' })
         expect(route.status).toBe(201);
+        expect(typeof route.body).toBe('object')
+    })
+
+    it('should respond to a GET request at /notes with 200 and an object, if the user is logged in', async () => {
+        const request = await mockRequest.post('/signin').auth('tester', 'test');
+        const token = request.body.token;
+        const route = await mockRequest.get('/notes').auth(`${token}`, { type: 'bearer' })
+        console.log('@@@@@@@@@@@@@@@@', route.body)
+        expect(route.status).toBe(200);
+        expect(typeof route.body).toBe('object')
+    })
+
+    it('should respond to a GET request at /notes with 200 and an object, if the user is logged in', async () => {
+        const request = await mockRequest.post('/signin').auth('tester', 'test');
+        const token = request.body.token;
+        const route = await mockRequest.get('/notes/1').auth(`${token}`, { type: 'bearer' })
+        expect(route.status).toBe(200);
+        expect(typeof route.body).toBe('object')
+    })
+
+    it('should respond to a PUT request at /notes with 202 and an object, if the user is logged in and has permission', async () => {
+        const request = await mockRequest.post('/signin').auth('tester', 'test');
+        const token = request.body.token;
+        const route = await mockRequest.put('/notes/1').send({ name: "funner", description: "funnest" }).auth(`${token}`, { type: 'bearer' })
+        expect(route.status).toBe(202);
+        expect(typeof route.body).toBe('object')
+    })
+
+    it('should respond to a DELETE at /notes with 201 and an object, if the user is logged in', async () => {
+        const request = await mockRequest.post('/signin').auth('tester', 'test');
+        const token = request.body.token;
+        const route = await mockRequest.delete('/notes/1').auth(`${token}`, { type: 'bearer' })
+        expect(route.status).toBe(202);
         expect(typeof route.body).toBe('object')
 
     })
