@@ -10,6 +10,7 @@ module.exports = async (req, res, next) => {
 
   try {
     req.user = await users.authenticateBasic(user, pass)
+    //delete this method and do everything in the middleware
     next();
   } catch (e) {
     _authError()
