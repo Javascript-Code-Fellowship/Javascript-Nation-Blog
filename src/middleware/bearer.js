@@ -2,13 +2,15 @@
 require("dotenv").config()
 const { users } = require('../models/index.js');
 const HttpError = require("../error-handlers/http-error")
+const jwt = require("jsonwebtoken");
 
 module.exports = async (req, res, next) => {
   try {
     if (!req.headers.authorization) { return next(new HttpError("Invalid credentials", 401)) }
 
     const token = req.headers.authorization.split(' ').pop();
-    const validUser = users.findOne({ where: { username: token.username } })
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    const validUser = users.findOne({ where: { username: decodedToken.username } })
     if (!validUser) {
       return next(new HttpError("Invalid credentials", 401))
     }
