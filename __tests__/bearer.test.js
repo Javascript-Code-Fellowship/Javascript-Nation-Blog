@@ -3,6 +3,7 @@
 require('dotenv').config();
 const middleware = require('../src/middleware/bearer.js');
 const { db, users } = require('../src/models/index.js');
+const HttpError = require('../src/error-handlers/http-error.js')
 const jwt = require('jsonwebtoken');
 
 let testUsers = {
@@ -38,10 +39,11 @@ describe('Auth Middleware', () => {
         authorization: 'Bearer thisisabadtoken',
       };
 
+      let error = new HttpError("Invalid credentials", 401);
+
       return middleware(req, res, next)
         .then(() => {
-          expect(next).toHaveBeenCalled(Error('Invalid credentials'));
-          expect(res.status).toHaveBeenCalledWith(401);
+          expect(next).toHaveBeenCalledWith(error);
         });
 
     });
