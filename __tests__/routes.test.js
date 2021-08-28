@@ -6,6 +6,7 @@ const supertest = require('supertest');
 const { app } = require('../src/server.js');
 const { db, users, notes } = require('../src/models/index');
 const { expect } = require('@jest/globals');
+const send = require('send');
 
 const mockRequest = supertest(app);
 
@@ -27,12 +28,12 @@ describe('AUTH ROUTES', () => {
         expect(typeof request.body).toBe('object')
     })
 
-    xit('should respond to a POST at /signup with a 406 if no username and password are provided', async () => {
-        const request = await mockRequest.post('/signup').send({ username: "", password: "" })
+    it('should respond to a POST at /signup with a 406 if no username and password are provided', async () => {
+        const request = await mockRequest.post('/signup').send({})
         expect(request.status).toBe(406)
     })
 
-    xit('should respond to a POST at /signup with a 409 if user already exists', async () => {
+    it('should respond to a POST at /signup with a 409 if user already exists', async () => {
         const request = await mockRequest.post('/signup').send({ username: "tester", password: "test" });
         expect(request.status).toBe(409)
     })
@@ -47,9 +48,15 @@ describe('AUTH ROUTES', () => {
 
 })
 
-xdescribe('RESOURCES ROUTES', () => {
+describe('RESOURCES ROUTES', () => {
 
-    it('should respond to a POST at /notes with 201 and an object, if the user is logged in', () => {
+    it('should respond to a POST at /notes with 201 and an object, if the user is logged in', async () => {
+        const request = await mockRequest.post('/signin').auth('tester', 'test');
+        const token = request.body.token;
+        const route = await mockRequest.post('/notes').send({ name: "fun", description: "funner" }).auth('Authorization', `Bearer ${token}`)
+        console.log('@@@@@@@@@@@@@@@', route)
+        expect(route.status).toBe(201);
+        expect(typeof route.body).toBe('object')
 
     })
 })

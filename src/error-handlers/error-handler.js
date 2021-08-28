@@ -1,6 +1,7 @@
 async function errorHandler(err, req, res, next) {
     if (res.headersSent) {
         return next(err);
+        //kill the process dont do anything     
     }
     console.log(err);
     //so now the error that we gave a status code and a message is picked up here and deconstructed into a response
