@@ -8,11 +8,9 @@ module.exports = (capability) => {
       if (req.user.capabilities.includes(capability)) {
         next()
       } else {
-        next('error')
         return next(new HttpError("Invalid credentials", 401))
       }
     } catch (e) {
-      next('error')
       return next(new HttpError("Invalid credentials", 401))
     }
   }
