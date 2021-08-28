@@ -1,6 +1,7 @@
 'use strict';
 
 const middleware = require('../src/middleware/basic.js');
+const HttpError = require('../src/error-handlers/http-error.js')
 const { db, users } = require('../src/models/index.js');
 
 let testUsers = {
@@ -35,10 +36,11 @@ describe('Basic auth middleware testing', () => {
         authorization: 'Basic YmFkX3Bhc3N3b3Jk',
       };
 
+      let error = new HttpError("Invalid credentials", 401);
+
       return middleware(req, res, next)
         .then(() => {
-          expect(next).not.toHaveBeenCalled();
-          expect(res.status).toHaveBeenCalledWith(403);
+          expect(next).toHaveBeenCalledWith(error);
         });
 
     });
