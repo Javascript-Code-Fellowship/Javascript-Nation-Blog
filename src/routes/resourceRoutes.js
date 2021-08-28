@@ -9,6 +9,8 @@ const HttpError = require("../error-handlers/http-error");
 //pull in needed files
 // pull in permissions MW
 //pull in bearerAuth MW
+//pull in acl
+const acl = require('../middleware/acl.js');
 
 
 
@@ -74,10 +76,10 @@ const handleDeleteOne = async (req, res, next) => {
     }
 }
 
-resourceRouter.post('/notes', bearerAuth, handleCreate);
-resourceRouter.get('/notes', bearerAuth, handleGetAll)
-resourceRouter.get('/notes/:id', bearerAuth, handleGetOne)
-resourceRouter.put('/notes/:id', bearerAuth, handleUpdateOne)
-resourceRouter.delete('/notes/:id', bearerAuth, handleDeleteOne)
+resourceRouter.post('/notes', bearerAuth, acl, handleCreate);
+resourceRouter.get('/notes', bearerAuth, acl, handleGetAll)
+resourceRouter.get('/notes/:id', bearerAuth, acl, handleGetOne)
+resourceRouter.put('/notes/:id', bearerAuth, acl, handleUpdateOne)
+resourceRouter.delete('/notes/:id', bearerAuth, acl, handleDeleteOne)
 
 module.exports = resourceRouter;

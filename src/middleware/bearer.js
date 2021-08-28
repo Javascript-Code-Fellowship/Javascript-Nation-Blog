@@ -8,8 +8,7 @@ module.exports = async (req, res, next) => {
     if (!req.headers.authorization) { return next(new HttpError("Invalid credentials", 401)) }
 
     const token = req.headers.authorization.split(' ').pop();
-    const validUser = await users.model.authenticateToken(token);
-
+    const validUser = await users.authenticateToken(token);
     req.user = validUser;
     req.token = validUser.token;
     next();
