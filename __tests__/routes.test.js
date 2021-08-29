@@ -23,7 +23,7 @@ afterAll(async () => {
 describe('AUTH ROUTES', () => {
 
     it('should respond to a POST at /signup with a 201 and object when provided with a username and password', async () => {
-        const request = await mockRequest.post('/signup').send({ username: "tester", password: "test" });
+        const request = await mockRequest.post('/signup').send({ username: "tester", password: "test", role: "admin" });
         expect(request.status).toBe(201);
         expect(typeof request.body).toBe('object')
     })
