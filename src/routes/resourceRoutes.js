@@ -30,7 +30,7 @@ const handleGetAll = async (req, res, next) => {
     try {
         let username = req.user.username;
         let userid = req.user.id;
-        let records = await notes.findAll({ where: {UserId: userid } })
+        let records = await notes.findAll({ })
         if (records.length === 0) {
             return next(new HttpError("No notes here", 404))
         }
@@ -57,26 +57,44 @@ const handleUpdateOne = async (req, res, next) => {
     if (!req.params.id) {
         return next(new HttpError("Please specify which note you're trying to access", 400))
     }
-    try {
-        let id = req.params.id;
-        let obj = req.body
-        let updated = await notes.update(obj, { where: { id } });
-        res.status(202).send(updated);
-    } catch (e) {
-        return next(new HttpError("Could not find that note", 404))
+    let userid = req.user.id;
+    let id = req.params.id
+    let record = await notes.findOne({ where: {id: id} })
+    console.log(req.user.role)
+    if ((req.user.role === 'admin') || (record.UserId === userid)) {
+        try {
+            let id = req.params.id;
+            let obj = req.body
+            let updated = await notes.update(obj, { where: { id } });
+            res.status(202).send(updated);
+        } catch (e) {
+            return next(new HttpError("Could not find that note", 404))
+        }
     }
+    if (record.UserId !== userid) {
+        return next(new HttpError("Action forbidden. Only the user that created the note can update it.", 403))
+    }
+    
 }
 
 const handleDeleteOne = async (req, res, next) => {
     if (!req.params.id) {
         return next(new HttpError("Please specify which note you're trying to access", 400))
     }
-    try {
-        let id = req.params.id;
-        let deleted = await notes.destroy({ where: { id } })
-        res.status(202).send("note was deleted")
-    } catch (e) {
-        return next(new HttpError("Could not find that note", 404))
+    let userid = req.user.id;
+    let id = req.params.id
+    let record = await notes.findOne({ where: {id: id} })
+    if ((req.user.role === 'admin') || (record.UserId === userid)) {
+        try {
+            let id = req.params.id;
+            let deleted = await notes.destroy({ where: { id } })
+            res.status(202).send("note was deleted")
+        } catch (e) {
+            return next(new HttpError("Could not find that note", 404))
+        }
+    }
+    if (record.UserId !== userid) {
+        return next(new HttpError("Action forbidden. Only the user that created the note can delete it.", 403))
     }
 }
 

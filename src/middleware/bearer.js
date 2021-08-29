@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
 
     const token = req.headers.authorization.split(' ').pop();
     const decodedToken = jwt.verify(token, process.env.SECRET)
-    const validUser = users.findOne({ where: { username: decodedToken.username } })
+    const validUser = await users.findOne({ where: { username: decodedToken.username } })
     if (!validUser) {
       return next(new HttpError("Invalid credentials", 401))
     }
