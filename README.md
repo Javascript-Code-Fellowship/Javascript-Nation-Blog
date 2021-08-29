@@ -5,7 +5,7 @@ Welcome! To the Code Fellows 401d43 class Javascript Blog! This is an api where 
 
 -------------------------------------------------------
 
-### Contributors: Jaya Dehard, Gina Hobbs, Jessica Parker, Rachael Rice, David Whitmore.
+### Contributors: Jaya Dehart, Gina Hobbs, Jessica Parker, Rachael Rice, David Whitmore.
 
 -------------------------------------------------------
     
